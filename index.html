@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Button Click Counter</title>
+<!-- Style for the Click Counter and Reset -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+        background-image: url('https://img.sanishtech.com/u/dacce49bea544ac13568ce7b84648075.gif');
+    h1 {
+    background-color: red;
+    color: white;
+    }
+    h2 {
+    background-color: yellow;
+    color: white;
+    }
+    p {
+    background-color: green;
+    color: white;
+    }
+    div {
+    background-color: blue;
+    color: white;
+    }
+    }
+    button {
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    #count {
+        font-weight: bold;
+        font-size: 20px;
+        color: #333;
+    }
+</style>
+
+<!-- Style for the Stapler Button -->
+<style>
+/* Container for the image and overlay */
+.container {
+  position: relative;
+  width: 300px;
+  cursor: pointer;
+}
+
+/* The image */
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The overlay (hidden by default) */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.6);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none; /* Prevent blocking clicks when hidden */
+}
+
+/* Show overlay when active */
+.overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+</style>
+
+<!-- Style for the Countdown Buttons -->
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+    }
+    #timer {
+        font-size: 2em;
+        margin: 20px 0;
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 1em;
+        margin: 5px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<h2>Click Counter</h2>
+<p>You have clicked the button <span id="count">0</span> times.</p>
+
+<!-- Buttons -->
+<h1>Countdown Timer</h1>
+<div id="timer">00:00</div>
+
+<button id="startBtn">Start</button>
+<button id="pauseBtn" disabled>Pause</button>
+<button id="resetBtn" disabled>Reset</button>
+
+<button id="clickBtn">Click Me
+<div class="container" id="imgContainer">
+  <img src="https://image2url.com/gifs/1764011885321-c8f6242b-b963-425e-992a-70779613c823.gif" alt="Sample" class="image">
+  <div class="overlay" id="overlay">
+    <div><img src="https://image2url.com/images/1764012337536-cfa1db05-74ba-4be5-9724-4a4d2b5063f7.jpg" width="270" height="220"></div>
+  </div>
+</div>
+</button>
+
+
+<script>
+(function() {
+    // Use localStorage to persist count across page reloads
+    let count = parseInt(localStorage.getItem("clickCount")) || 0;
+
+    const countDisplay = document.getElementById("count");
+    const clickBtn = document.getElementById("clickBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    // Function to update the display and storage
+    function updateDisplay() {
+        countDisplay.textContent = count;
+        localStorage.setItem("clickCount", count);
+    }
+
+    // Increment count on click
+    clickBtn.addEventListener("click", () => {
+        count++;
+        updateDisplay();
+    });
+
+    // Reset count
+    resetBtn.addEventListener("click", () => {
+        count = 0;
+        updateDisplay();
+    });
+
+    // Initialize display on page load
+    updateDisplay();
+})();
+</script>
+
+<script>
+// Get elements
+const container = document.getElementById('imgContainer');
+const overlay = document.getElementById('overlay');
+
+// Toggle overlay on click
+container.addEventListener('click', () => {
+  overlay.classList.toggle('active');
+});
+</script>
+
+<!-- This is for the Countdown Buttons -->
+<script>
+(function() {
+    let countdown; // Interval ID
+    let timeLeft = 120; // Countdown time in seconds
+    let isRunning = false;
+
+    const timerDisplay = document.getElementById('timer');
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    // Format seconds into MM:SS
+    function formatTime(seconds) {
+        const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+        const s = String(seconds % 60).padStart(2, '0');
+        return `${m}:${s}`;
+    }
+
+    // Update the timer display
+    function updateDisplay() {
+        timerDisplay.textContent = formatTime(timeLeft);
+    }
+
+    // Start countdown
+    function startTimer() {
+        if (isRunning) return; // Prevent multiple intervals
+        isRunning = true;
+        startBtn.disabled = true;
+        pauseBtn.disabled = false;
+        resetBtn.disabled = false;
+
+        countdown = setInterval(() => {
+            if (timeLeft > 0) {
+                timeLeft--;
+                updateDisplay();
+            } else {
+                clearInterval(countdown);
+                isRunning = false;
+                alert("Time's up! Your final score is displayed on the screen.");
+            }
+        }, 1000);
+    }
+
+    // Pause countdown
+    function pauseTimer() {
+        clearInterval(countdown);
+        isRunning = false;
+        startBtn.disabled = false;
+        pauseBtn.disabled = true;
+    }
+
+    // Reset countdown
+    function resetTimer() {
+        clearInterval(countdown);
+        timeLeft = 120; // Reset to initial value
+        updateDisplay();
+        isRunning = false;
+        startBtn.disabled = false;
+        pauseBtn.disabled = true;
+        resetBtn.disabled = true;
+    }
+
+    // Event listeners
+    startBtn.addEventListener('click', startTimer);
+    pauseBtn.addEventListener('click', pauseTimer);
+    resetBtn.addEventListener('click', resetTimer);
+
+    // Initialize display
+    updateDisplay();
+})();
+</script>
+
+</body>
+</html>
